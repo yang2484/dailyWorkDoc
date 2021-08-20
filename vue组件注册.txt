@@ -1,0 +1,27 @@
+//扫描@/components/common文件夹下的所有的`.vue` 文件，并注册
+const componentsWatcher = (scanner, Vue) => {
+    console.log(scanner)
+    scanner.keys().map(key => {
+        let name = scanner(key).default.name
+        if (name) {
+            console.log(Vue.component)
+
+* // Vue.component的第二个参数 可以传些什么
+              Vue.component(name, function (resolve) {
+                  console.log([key + ''], resolve)
+                  require([key + ''], resolve)
+              })
+          }
+      })
+  }
+  //扫描匹配条件
+  const vueScanner = require.context(
+      '@/components/common',
+      true,
+      /\.vue$/
+  )
+
+const install = function (Vue, opts = {}) {
+    componentsWatcher(vueScanner, Vue)
+};
+export default install;
